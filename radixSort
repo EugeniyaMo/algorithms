@@ -1,0 +1,51 @@
+#include<fstream>
+#include<string>
+
+using namespace std;
+
+void Counting_Sort(string *str, int n, int m, int num)
+{
+    int arr[200] = {0};
+    for (int i = 0; i < n; i++)
+        arr[str[i][num]]++;
+    for (int i = 1; i < 200; i++)
+        arr[i] += arr[i - 1];
+    string ans[1001] = {"\0"};
+    for (int i = n - 1; i >= 0; i--)
+    {
+        ans[arr[int(str[i][num])] - 1] = str[i];
+        arr[int(str[i][num])]--;
+    }
+    for (int i = 0; i < n; i++)
+        str[i] = ans[i];
+}
+
+void Radix_Sort(string *str, int n, int m, int k)
+{
+    int index = m - 1;
+    for (int i = k - 1; i >= 0; i--)
+    {
+        Counting_Sort(str, n, m, index);
+        index--;
+    }
+}
+
+int main()
+{
+    fstream fin, fout;
+    int n, m, k;
+    string a[1001];
+    fin.open("radixsort.in", ios::in);
+    fin >> n >> m >> k;
+    for (int i = 0; i < n; i++)
+        //getline(cin, a[i]);
+        fin >> a[i];
+    fin.close();
+    Radix_Sort(a, n, m, k);
+    fout.close();
+    fout.open("radixsort.out", ios::out);
+    for (int i = 0; i < n; i++)
+        fout << a[i] << '\n';
+    fout.close();
+    return 0;
+}
